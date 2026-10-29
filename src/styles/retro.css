@@ -1,0 +1,316 @@
+:root {
+  --win-bg: #c0c0c0;
+  --win-text: #000000;
+  --title-active-start: #000080;
+  --title-active-end: #1084d0;
+  --title-inactive-start: #808080;
+  --title-inactive-end: #b4b4b4;
+  --title-text: #ffffff;
+  --btn-face: #c0c0c0;
+  --btn-highlight: #ffffff;
+  --btn-shadow: #808080;
+  --btn-dark-shadow: #000000;
+  --desktop-bg: #008080;
+  --select-bg: #000080;
+  --select-text: #ffffff;
+  --window-padding: 2px;
+}
+
+@font-face {
+  font-family: 'Pixelated MS Sans Serif';
+  src: local('MS Sans Serif'), local('Microsoft Sans Serif'), local('Tahoma'), local('Geneva'), sans-serif;
+}
+
+body {
+  font-family: 'Pixelated MS Sans Serif', 'Microsoft Sans Serif', sans-serif;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+  background-color: var(--desktop-bg);
+  color: var(--win-text);
+  margin: 0;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Utilities */
+.raised {
+  border-top: 2px solid var(--btn-highlight);
+  border-left: 2px solid var(--btn-highlight);
+  border-bottom: 2px solid var(--btn-dark-shadow);
+  border-right: 2px solid var(--btn-dark-shadow);
+  box-shadow: inset -1px -1px 0 var(--btn-shadow), inset 1px 1px 0 var(--btn-face);
+  background: var(--win-bg);
+}
+
+.sunken {
+  border-top: 2px solid var(--btn-dark-shadow);
+  border-left: 2px solid var(--btn-dark-shadow);
+  border-bottom: 2px solid var(--btn-highlight);
+  border-right: 2px solid var(--btn-highlight);
+  box-shadow: inset -1px -1px 0 var(--btn-face), inset 1px 1px 0 var(--btn-shadow);
+  background: #ffffff;
+}
+
+/* Focus */
+:focus-visible {
+  outline: 1px dotted var(--win-text);
+  outline-offset: -4px;
+}
+
+/* Selection */
+::selection {
+  background-color: var(--select-bg);
+  color: var(--select-text);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+  background: var(--win-bg);
+  border-left: 1px solid var(--btn-highlight);
+}
+::-webkit-scrollbar-button:single-button {
+  background: var(--btn-face);
+  border-top: 1px solid var(--btn-highlight);
+  border-left: 1px solid var(--btn-highlight);
+  border-right: 1px solid var(--btn-dark-shadow);
+  border-bottom: 1px solid var(--btn-dark-shadow);
+  box-shadow: inset -1px -1px 0 var(--btn-shadow);
+  height: 16px;
+  width: 16px;
+}
+::-webkit-scrollbar-button:single-button:active {
+  border-top: 1px solid var(--btn-dark-shadow);
+  border-left: 1px solid var(--btn-dark-shadow);
+  border-right: 1px solid var(--btn-highlight);
+  border-bottom: 1px solid var(--btn-highlight);
+  box-shadow: inset 1px 1px 0 var(--btn-shadow);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--btn-face);
+  border-top: 1px solid var(--btn-highlight);
+  border-left: 1px solid var(--btn-highlight);
+  border-right: 1px solid var(--btn-dark-shadow);
+  border-bottom: 1px solid var(--btn-dark-shadow);
+  box-shadow: inset -1px -1px 0 var(--btn-shadow);
+}
+::-webkit-scrollbar-track {
+  background: repeating-conic-gradient(var(--win-bg) 0% 25%, #ffffff 0% 50%) 50% / 2px 2px;
+}
+
+/* Desktop */
+.retro-desktop {
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--desktop-bg);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Icons */
+.retro-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 76px;
+  padding: 4px;
+  cursor: default;
+}
+.retro-icon img {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 4px;
+}
+.retro-icon span {
+  color: white;
+  background: transparent;
+  padding: 1px 3px;
+  text-align: center;
+  font-size: 11px;
+  word-break: break-word;
+}
+.retro-icon.selected span {
+  background-color: var(--select-bg);
+  color: var(--select-text);
+  border: 1px dotted rgba(255, 255, 255, 0.5);
+}
+
+/* Window */
+.retro-window {
+  background: var(--win-bg);
+  border-top: 2px solid var(--btn-highlight);
+  border-left: 2px solid var(--btn-highlight);
+  border-right: 2px solid var(--btn-dark-shadow);
+  border-bottom: 2px solid var(--btn-dark-shadow);
+  box-shadow: inset -1px -1px 0 var(--btn-shadow), inset 1px 1px 0 var(--btn-face), 1px 1px 3px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  padding: 2px;
+}
+
+/* Title Bar */
+.retro-title-bar {
+  background: linear-gradient(90deg, var(--title-active-start), var(--title-active-end));
+  color: var(--title-text);
+  padding: 2px 2px 2px 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 18px;
+  font-weight: bold;
+}
+.retro-window.inactive .retro-title-bar {
+  background: linear-gradient(90deg, var(--title-inactive-start), var(--title-inactive-end));
+}
+.retro-title-bar-text {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+}
+.retro-title-bar-controls {
+  display: flex;
+  gap: 2px;
+}
+.retro-title-bar-button {
+  width: 16px;
+  height: 14px;
+  background: var(--btn-face);
+  border-top: 1px solid var(--btn-highlight);
+  border-left: 1px solid var(--btn-highlight);
+  border-right: 1px solid var(--btn-dark-shadow);
+  border-bottom: 1px solid var(--btn-dark-shadow);
+  box-shadow: inset -1px -1px 0 var(--btn-shadow);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 9px;
+  color: black;
+  cursor: default;
+}
+.retro-title-bar-button:active {
+  border-top: 1px solid var(--btn-dark-shadow);
+  border-left: 1px solid var(--btn-dark-shadow);
+  border-right: 1px solid var(--btn-highlight);
+  border-bottom: 1px solid var(--btn-highlight);
+  box-shadow: inset 1px 1px 0 var(--btn-shadow);
+  padding-top: 1px;
+  padding-left: 1px;
+}
+
+/* Button */
+.retro-button {
+  background: var(--btn-face);
+  border-top: 2px solid var(--btn-highlight);
+  border-left: 2px solid var(--btn-highlight);
+  border-right: 2px solid var(--btn-dark-shadow);
+  border-bottom: 2px solid var(--btn-dark-shadow);
+  box-shadow: inset -1px -1px 0 var(--btn-shadow), inset 1px 1px 0 var(--btn-face);
+  color: var(--win-text);
+  padding: 4px 10px;
+  font-family: inherit;
+  font-size: 11px;
+  cursor: default;
+}
+.retro-button:active {
+  border-top: 2px solid var(--btn-dark-shadow);
+  border-left: 2px solid var(--btn-dark-shadow);
+  border-right: 2px solid var(--btn-highlight);
+  border-bottom: 2px solid var(--btn-highlight);
+  box-shadow: inset 1px 1px 0 var(--btn-shadow);
+  padding-top: 5px;
+  padding-bottom: 3px;
+  padding-left: 11px;
+  padding-right: 9px;
+}
+
+/* Inputs */
+.retro-input {
+  background: #ffffff;
+  border-top: 2px solid var(--btn-dark-shadow);
+  border-left: 2px solid var(--btn-dark-shadow);
+  border-bottom: 2px solid var(--btn-highlight);
+  border-right: 2px solid var(--btn-highlight);
+  box-shadow: inset -1px -1px 0 var(--btn-face), inset 1px 1px 0 var(--btn-shadow);
+  padding: 3px 4px;
+  font-family: inherit;
+  font-size: 11px;
+  color: var(--win-text);
+}
+
+/* Panels */
+.retro-panel {
+  border-top: 2px solid var(--btn-dark-shadow);
+  border-left: 2px solid var(--btn-dark-shadow);
+  border-bottom: 2px solid var(--btn-highlight);
+  border-right: 2px solid var(--btn-highlight);
+  box-shadow: inset -1px -1px 0 var(--btn-face), inset 1px 1px 0 var(--btn-shadow);
+  padding: 4px;
+  background: var(--win-bg);
+}
+
+/* Taskbar */
+.retro-taskbar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  background: var(--win-bg);
+  border-top: 1px solid var(--btn-highlight);
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  z-index: 9999;
+  box-shadow: 0 -1px 2px rgba(0,0,0,0.1);
+}
+
+.retro-start-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: bold;
+  height: 22px;
+  padding: 0 6px;
+  margin-right: 4px;
+}
+.retro-start-button img {
+  width: 16px;
+  height: 16px;
+}
+
+/* Status Bar */
+.retro-status-bar {
+  margin-top: auto;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+  border-top: 1px solid var(--btn-shadow);
+  border-bottom: 1px solid var(--btn-highlight);
+  font-size: 11px;
+  gap: 8px;
+}
+
+/* Context Menu */
+.retro-context-menu {
+  position: absolute;
+  background: var(--win-bg);
+  border-top: 2px solid var(--btn-highlight);
+  border-left: 2px solid var(--btn-highlight);
+  border-right: 2px solid var(--btn-dark-shadow);
+  border-bottom: 2px solid var(--btn-dark-shadow);
+  box-shadow: inset -1px -1px 0 var(--btn-shadow), inset 1px 1px 0 var(--btn-face), 2px 2px 4px rgba(0,0,0,0.2);
+  padding: 2px;
+  z-index: 10000;
+  min-width: 120px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

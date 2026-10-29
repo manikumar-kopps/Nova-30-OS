@@ -1,0 +1,89 @@
+/* CRT Effect Wrapper */
+.crt-enabled {
+  position: relative;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--desktop-bg);
+}
+
+.crt-enabled::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 2147483647;
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+}
+
+.crt-enabled::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0,0,0,0.4) 100%);
+  z-index: 2147483647;
+  pointer-events: none;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
+}
+
+/* Chromatic Aberration & Slight blur */
+.crt-enabled > * {
+  animation: crtFlicker 0.15s infinite;
+  text-shadow: 0.5px 0.5px 1px rgba(255,255,255,0.1), -1px 0px 1px rgba(255,0,0,0.3), 1px 0px 1px rgba(0,0,255,0.3);
+}
+
+/* Screen curvature wrapper - usually wrap the desktop */
+.crt-enabled .retro-desktop {
+  animation: turnOn 1.2s ease-out forwards;
+}
+
+@keyframes turnOn {
+  0% {
+    transform: scale(1, 0.001) translate3d(0, 0, 0);
+    filter: brightness(10);
+  }
+  20% {
+    transform: scale(1, 0.001) translate3d(0, 0, 0);
+    filter: brightness(5);
+  }
+  50% {
+    transform: scale(1, 1) translate3d(0, 0, 0);
+    filter: brightness(2);
+  }
+  100% {
+    transform: scale(1, 1) translate3d(0, 0, 0);
+    filter: brightness(1);
+  }
+}
+
+@keyframes crtFlicker {
+  0% { opacity: 0.98; }
+  50% { opacity: 1; }
+  100% { opacity: 0.98; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crt-enabled > * {
+    animation: none !important;
+  }
+  .crt-enabled .retro-desktop {
+    animation: none !important;
+  }
+}
+
+.reduce-motion .crt-enabled > * {
+  animation: none !important;
+}
+
+.reduce-motion .crt-enabled .retro-desktop {
+  animation: none !important;
+}

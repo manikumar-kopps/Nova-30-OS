@@ -1,0 +1,150 @@
+/* Animations */
+
+@keyframes windowOpen {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes windowClose {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+}
+
+@keyframes windowMinimize {
+  from {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.2) translateY(500px);
+    opacity: 0;
+  }
+}
+
+@keyframes startMenuOpen {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes startMenuClose {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+}
+
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes glitch {
+  0% { transform: translate(0) }
+  20% { transform: translate(-2px, 2px) }
+  40% { transform: translate(-2px, -2px) }
+  60% { transform: translate(2px, 2px) }
+  80% { transform: translate(2px, -2px) }
+  100% { transform: translate(0) }
+}
+
+@keyframes flicker {
+  0% { opacity: 1; }
+  5% { opacity: 0.8; }
+  10% { opacity: 1; }
+  15% { opacity: 0.9; }
+  50% { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+@keyframes bootText {
+  from { max-height: 0; opacity: 0; }
+  to { max-height: 1000px; opacity: 1; }
+}
+
+@keyframes loadingBar {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+@keyframes marquee {
+  from { transform: translateX(100%); }
+  to { transform: translateX(-100%); }
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 5px rgba(0, 255, 255, 0.2); }
+  50% { box-shadow: 0 0 15px rgba(0, 255, 255, 0.6); }
+  100% { box-shadow: 0 0 5px rgba(0, 255, 255, 0.2); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+  20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+
+@keyframes matrixRain {
+  from { background-position: 0% 0%; }
+  to { background-position: 0% 100%; }
+}
+
+/* Utility Classes */
+.animate-window-open { animation: windowOpen 0.2s cubic-bezier(0.0, 0.0, 0.2, 1); }
+.animate-window-close { animation: windowClose 0.2s cubic-bezier(0.4, 0.0, 1, 1) forwards; }
+.animate-window-minimize { animation: windowMinimize 0.25s ease-in forwards; }
+.animate-start-open { animation: startMenuOpen 0.15s ease-out; }
+.animate-start-close { animation: startMenuClose 0.15s ease-in forwards; }
+.animate-blink { animation: blink 1s infinite; }
+.animate-glitch { animation: glitch 0.2s infinite; }
+.animate-flicker { animation: flicker 2s infinite; }
+.animate-shake { animation: shake 0.4s ease-in-out; }
+.animate-fade-in { animation: fadeIn 0.3s ease-in; }
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
