@@ -32,6 +32,40 @@ export interface SearchResultItem {
 }
 
 /**
+ * Helper to dispatch chat completion requests via backend proxy or direct Azure endpoint.
+ */
+async function postChatCompletion(body: any): Promise<Response> {
+  // First attempt backend proxy endpoint
+  try {
+    const proxyResp = await fetch('/api/ai/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    if (proxyResp.ok) {
+      return proxyResp;
+    }
+  } catch {
+    // Backend proxy not reachable (e.g. running standalone vite)
+  }
+
+  // Fallback to client-side direct Azure call if credentials configured
+  if (AZURE_ENDPOINT && AZURE_API_KEY) {
+    return fetch(`${AZURE_ENDPOINT}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key': AZURE_API_KEY,
+        'Authorization': `Bearer ${AZURE_API_KEY}`
+      },
+      body: JSON.stringify(body)
+    });
+  }
+
+  throw new Error('No AI provider configured');
+}
+
+/**
  * Procedural fallback generator when offline or if API key is rate-limited.
  */
 function generateFallbackPage(url: string, query?: string): RetroPageResult {
@@ -121,22 +155,14 @@ Requirements:
 2. Do not include markdown code block formatting (or wrap inside clean JSON).
 3. Keep the content safe, playful, nostalgic, and creative.`;
 
-    const response = await fetch(`${AZURE_ENDPOINT}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'api-key': AZURE_API_KEY,
-        'Authorization': `Bearer ${AZURE_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: TEXT_MODEL,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: `Generate the 1998 website for URL/Topic: ${target}` }
-        ],
-        temperature: 0.8,
-        max_tokens: 1400
-      })
+    const response = await postChatCompletion({
+      model: TEXT_MODEL,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: `Generate the 1998 website for URL/Topic: ${target}` }
+      ],
+      temperature: 0.8,
+      max_tokens: 1400
     });
 
     if (!response.ok) {
@@ -514,19 +540,11 @@ Return ONLY a valid JSON object with the following schema:
 }
 Be completely truthful, accurate, informative and comprehensive. Output strictly raw JSON without markdown formatting.`;
 
-    const response = await fetch(`${AZURE_ENDPOINT}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'api-key': AZURE_API_KEY,
-        'Authorization': `Bearer ${AZURE_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: TEXT_MODEL,
-        messages: [{ role: 'user', content: prompt }],
-        temperature: 0.3,
-        max_tokens: 1200
-      })
+    const response = await postChatCompletion({
+      model: TEXT_MODEL,
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.3,
+      max_tokens: 1200
     });
 
     if (!response.ok) {
@@ -568,25 +586,17 @@ export async function searchRetroWeb(query: string): Promise<SearchResultItem[]>
  */
 export async function askNovaAi(prompt: string, context?: string): Promise<string> {
   try {
-    const response = await fetch(`${AZURE_ENDPOINT}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'api-key': AZURE_API_KEY,
-        'Authorization': `Bearer ${AZURE_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: TEXT_MODEL,
-        messages: [
-          { 
-            role: 'system', 
-            content: `You are NOVA 30 OS System Core, an intelligent vintage 1998 operating system AI. You speak with retro computing charm, subtle 90s tech references, and a slightly mysterious tone if asked about C:\\DO_NOT_OPEN or USER_07. Keep answers concise, witty, and helpful.` 
-          },
-          ...(context ? [{ role: 'system', content: `Context: ${context}` }] : []),
-          { role: 'user', content: prompt }
-        ],
-        max_tokens: 400
-      })
+    const response = await postChatCompletion({
+      model: TEXT_MODEL,
+      messages: [
+        { 
+          role: 'system', 
+          content: `You are NOVA 30 OS System Core, an intelligent vintage 1998 operating system AI. You speak with retro computing charm, subtle 90s tech references, and a slightly mysterious tone if asked about C:\\DO_NOT_OPEN or USER_07. Keep answers concise, witty, and helpful.` 
+        },
+        ...(context ? [{ role: 'system', content: `Context: ${context}` }] : []),
+        { role: 'user', content: prompt }
+      ],
+      max_tokens: 400
     });
 
     if (!response.ok) throw new Error('API request failed');
