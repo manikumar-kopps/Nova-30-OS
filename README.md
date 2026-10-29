@@ -115,3 +115,24 @@ NOVA 30 OS is engineered to be fully operable without requiring a mouse:
 4. **Desktop Mystery**: Find and open the `DO_NOT_OPEN` crystal ball icon on the desktop.
 5. **Secret Terminal Commands**: Try typing `devroom`, `sudo`, `hack`, `nova`, `secret`, `doom`, `42`, or `love` in the Terminal.
 6. **Blue Screen of Death**: Simulated BSOD event with safe return.
+
+---
+
+## 🌐 Deploy to Render.com
+
+To deploy this project as a Web Service on **Render.com**:
+
+1. **New Web Service**: Connect your GitHub repository `https://github.com/manikumar-kopps/Nova-30-OS.git`.
+2. **Environment**: Select `Python 3`.
+3. **Build Command**:
+   ```bash
+   ./build.sh
+   # OR:
+   npm install && npm run build && pip install -r requirements.txt
+   ```
+4. **Start Command**:
+   ```bash
+   gunicorn app:app
+   ```
+5. **Environment Variables** (Optional in Render Dashboard):
+   - Add any keys from `.env.example` as needed (e.g. `SECRET_KEY`, `VITE_AZURE_OPENAI_API_KEY`).
